@@ -15,13 +15,15 @@ namespace fs = std::filesystem;
 namespace {
 
 // 테스트용 임시 디렉터리
-const fs::path kTestDataDir = fs::path("E:/HiVe_145/tests/temp/mp4_reader_test");
+const fs::path kTestSourceDir = fs::path(__FILE__).parent_path();
+const fs::path kTestDataDir =
+  (kTestSourceDir / "../../temp/mp4_reader_test").lexically_normal();
 
 // 테스트용 샘플 미디어 파일 경로
 const fs::path kSampleMp4File =
-  fs::path("E:/HiVe_145/tests/data/media/perfect_night_5sec.mp4");
+  (kTestSourceDir / "../../data/media/perfect_night_5sec.mp4").lexically_normal();
 const fs::path kSampleH265Mp4File =
-  fs::path("E:/HiVe_145/tests/data/media/perfect_night_5sec_h265.mp4");
+  (kTestSourceDir / "../../data/media/perfect_night_5sec_h265.mp4").lexically_normal();
 
 bool
 has_annex_b_start_code(const std::vector<uint8_t>& data)

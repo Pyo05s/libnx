@@ -2,8 +2,8 @@
 // 생성일: 2026-02-23
 // 설명: RTSP 메시지 단위 테스트
 
-#include <gtest/gtest.h>
 #include "nxnet/rtsp/rtsp_message.h"
+#include <gtest/gtest.h>
 
 // ============================================================================
 // RtspRequest 직렬화 테스트
@@ -15,7 +15,7 @@ TEST(RtspMessageTest, SerializeOptionsRequest)
   request.method = nx::net::RtspMethod::kOptions;
   request.uri = "rtsp://192.168.0.168:554/media/video1";
   request.cseq = 1;
-  request.headers["User-Agent"] = "HiVe2 RTSP Client";
+  request.headers["User-Agent"] = "RTSP Client";
 
   auto serialized = request.serialize();
 
@@ -23,7 +23,7 @@ TEST(RtspMessageTest, SerializeOptionsRequest)
     serialized.find("OPTIONS rtsp://192.168.0.168:554/media/video1 RTSP/1.0"),
     std::string::npos);
   EXPECT_NE(serialized.find("CSeq: 1"), std::string::npos);
-  EXPECT_NE(serialized.find("User-Agent: HiVe2 RTSP Client"), std::string::npos);
+  EXPECT_NE(serialized.find("User-Agent: RTSP Client"), std::string::npos);
   EXPECT_NE(serialized.find("\r\n\r\n"), std::string::npos);
 }
 
@@ -54,8 +54,7 @@ TEST(RtspMessageTest, SerializeSetupRequestTcp)
 
   EXPECT_NE(serialized.find("SETUP"), std::string::npos);
   EXPECT_NE(
-    serialized.find("Transport: RTP/AVP/TCP;unicast;interleaved=0-1"),
-    std::string::npos);
+    serialized.find("Transport: RTP/AVP/TCP;unicast;interleaved=0-1"), std::string::npos);
 }
 
 TEST(RtspMessageTest, SerializePlayRequest)
@@ -124,22 +123,16 @@ TEST(RtspMessageTest, FindHeaderCaseInsensitive)
 
 TEST(RtspMessageTest, MethodToString)
 {
+  EXPECT_STREQ(nx::net::rtsp_method_to_string(nx::net::RtspMethod::kOptions), "OPTIONS");
   EXPECT_STREQ(
-    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kOptions),
-    "OPTIONS");
-  EXPECT_STREQ(
-    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kDescribe),
-    "DESCRIBE");
+    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kDescribe), "DESCRIBE");
   EXPECT_STREQ(nx::net::rtsp_method_to_string(nx::net::RtspMethod::kSetup), "SETUP");
   EXPECT_STREQ(nx::net::rtsp_method_to_string(nx::net::RtspMethod::kPlay), "PLAY");
   EXPECT_STREQ(nx::net::rtsp_method_to_string(nx::net::RtspMethod::kPause), "PAUSE");
   EXPECT_STREQ(
-    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kTeardown),
-    "TEARDOWN");
+    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kTeardown), "TEARDOWN");
   EXPECT_STREQ(
-    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kGetParameter),
-    "GET_PARAMETER");
+    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kGetParameter), "GET_PARAMETER");
   EXPECT_STREQ(
-    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kSetParameter),
-    "SET_PARAMETER");
+    nx::net::rtsp_method_to_string(nx::net::RtspMethod::kSetParameter), "SET_PARAMETER");
 }

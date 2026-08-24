@@ -1,4 +1,4 @@
-# HiVe2 프로젝트 코드 서식 설정
+# 프로젝트 코드 서식 설정
 # 기반: Google C++ Style Guide (프로젝트 가이드라인 우선 적용)
 # 참조: .github/copilot-instructions.md
 # clang-format options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
