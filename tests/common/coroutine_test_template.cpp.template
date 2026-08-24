@@ -1,0 +1,209 @@
+// 파일: coroutine_test_template.cpp
+// 설명: 코루틴 테스트 표준 템플릿
+// 새로운 비동기/코루틴 테스트 작성 시 이 파일을 복사하여 사용하세요
+
+#include <gtest/gtest.h>
+#include "../common/coroutine_helper.h"
+#include "../common/io_context_test_runner.h"
+
+#include <nxcore/util/asio_type.h>
+#include <memory>
+
+namespace {
+
+// ============================================================================
+// Fixture 정의
+// ============================================================================
+
+class MyAsyncComponentTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        // io_context 시작 (필수!)
+        m_runner.start();
+        
+        // io_context를 사용하는 컴포넌트 초기화
+        // m_component = create_component(m_runner.io_context());
+    }
+    
+    void TearDown() override
+    {
+        // 비동기 리소스 정리 (필요한 경우)
+        // if (m_component)
+        // {
+        //     m_runner.run_sync([&]() -> nx::awaitable<void> {
+        //         co_await m_component->stop();
+        //     });
+        // }
+        
+        // io_context 중지
+        m_runner.stop();
+    }
+
+protected:
+    test::IoContextTestRunner m_runner;
+    // std::unique_ptr<MyComponent> m_component;
+};
+
+// ============================================================================
+// 테스트 케이스
+// ============================================================================
+
+// 기본 비동기 작업 테스트
+TEST_F(MyAsyncComponentTest, BasicAsyncOperation)
+{
+    auto test_logic = [&]() -> nx::awaitable<void>
+    {
+        // 1. 비동기 작업 수행
+        // auto result = co_await m_component->do_something();
+        
+        // 2. 결과 검증
+        // EXPECT_EQ(result, expected_value);
+        
+        co_return;
+    };
+    
+    // 동기적 실행 및 완료 대기
+    m_runner.run_sync(test_logic());
+}
+
+// 타임아웃이 있는 테스트
+TEST_F(MyAsyncComponentTest, OperationWithTimeout)
+{
+    auto test_logic = [&]() -> nx::awaitable<void>
+    {
+        // 타임아웃 설정
+        AsioSteadyTimer timer(
+            m_runner.io_context(),
+            nx::seconds(5));
+        
+        // 비동기 작업과 타이머 경쟁
+        auto result = co_await (
+            // m_component->long_operation() ||
+            timer.async_wait(boost::asio::use_awaitable)
+        );
+        
+        // 검증
+        // EXPECT_TRUE(completed_in_time);
+        
+        co_return;
+    };
+    
+    // 전체 테스트 타임아웃 30초
+    m_runner.run_sync(test_logic(), nx::seconds(30));
+}
+
+// 여러 비동기 작업 순차 실행
+TEST_F(MyAsyncComponentTest, SequentialOperations)
+{
+    auto test_logic = [&]() -> nx::awaitable<void>
+    {
+        // 작업 1
+        // co_await m_component->operation1();
+        // EXPECT_TRUE(condition1);
+        
+        // 작업 2 (작업 1 완료 후)
+        // co_await m_component->operation2();
+        // EXPECT_TRUE(condition2);
+        
+        // 작업 3
+        // co_await m_component->operation3();
+        // EXPECT_TRUE(condition3);
+        
+        co_return;
+    };
+    
+    m_runner.run_sync(test_logic());
+}
+
+// 병렬 비동기 작업 테스트
+TEST_F(MyAsyncComponentTest, ParallelOperations)
+{
+    auto test_logic = [&]() -> nx::awaitable<void>
+    {
+        // 여러 작업을 병렬로 시작
+        // auto task1 = boost::asio::co_spawn(
+        //     m_runner.io_context(),
+        //     m_component->task1(),
+        //     boost::asio::use_awaitable);
+        
+        // auto task2 = boost::asio::co_spawn(
+        //     m_runner.io_context(),
+        //     m_component->task2(),
+        //     boost::asio::use_awaitable);
+        
+        // 모두 완료 대기
+        // auto [result1, result2] = co_await (task1 && task2);
+        
+        // 검증
+        // EXPECT_TRUE(result1);
+        // EXPECT_TRUE(result2);
+        
+        co_return;
+    };
+    
+    m_runner.run_sync(test_logic());
+}
+
+// 예외 처리 테스트
+TEST_F(MyAsyncComponentTest, ExceptionHandling)
+{
+    auto test_logic = [&]() -> nx::awaitable<void>
+    {
+        try
+        {
+            // 예외를 발생시킬 수 있는 작업
+            // co_await m_component->risky_operation();
+            
+            FAIL() << "Expected exception not thrown";
+        }
+        catch (const std::runtime_error& e)
+        {
+            // 예상된 예외
+            EXPECT_STREQ(e.what(), "expected error message");
+        }
+        catch (...)
+        {
+            FAIL() << "Unexpected exception type";
+        }
+        
+        co_return;
+    };
+    
+    m_runner.run_sync(test_logic());
+}
+
+// 장시간 실행 서버 테스트
+TEST_F(MyAsyncComponentTest, LongRunningServer)
+{
+    // 서버 시작 (비동기, detached)
+    // boost::asio::co_spawn(
+    //     m_runner.io_context(),
+    //     m_component->start_server(),
+    //     boost::asio::detached);
+    
+    // 잠시 대기하여 서버 초기화 완료
+    std::this_thread::sleep_for(nx::milliseconds(100));
+    
+    // 클라이언트 작업 (동기적으로)
+    auto client_work = [&]() -> nx::awaitable<void>
+    {
+        // co_await send_requests();
+        // EXPECT_TRUE(responses_received);
+        co_return;
+    };
+    
+    m_runner.run_sync(client_work());
+    
+    // 서버 중지
+    auto stop_server = [&]() -> nx::awaitable<void>
+    {
+        // co_await m_component->stop_server();
+        co_return;
+    };
+    
+    m_runner.run_sync(stop_server());
+}
+
+} // anonymous namespace

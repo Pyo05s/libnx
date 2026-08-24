@@ -1,0 +1,63 @@
+# HiVe2 프로젝트 코드 서식 설정
+# 기반: Google C++ Style Guide (프로젝트 가이드라인 우선 적용)
+# 참조: .github/copilot-instructions.md
+# clang-format options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+BasedOnStyle: LLVM
+
+# C++ 표준
+Standard: Latest
+
+# 들여쓰기: 2칸 공백
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ContinuationIndentWidth: 2
+AccessModifierOffset: -2
+IndentRequiresClause: false
+
+# 가로줄 제한
+ColumnLimit: 90
+
+BinPackLongBracedList: true
+BinPackParameters: OnePerLine #AlwaysOnePerLine
+
+AlwaysBreakAfterReturnType: TopLevelDefinitions
+BreakTemplateDeclarations: Yes # 템플릿 선언 줄바꿈 허용
+BreakInheritanceList: BeforeComma
+BreakConstructorInitializers: BeforeComma
+BreakAfterAttributes: Always
+BreakBeforeTemplateCloser: true
+BreakAfterOpenBracketBracedList: true
+BreakBeforeCloseBracketBracedList: true
+BreakAfterOpenBracketFunction: true
+#PenaltyBreakAssignment: 10000
+
+CompactNamespaces: false
+AlignOperands: AlignAfterOperator
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# 중괄호 스타일 (프로젝트 혼합 스타일)
+#   함수/클래스/구조체: Allman (새 줄)
+#   제어문(if/for/while): 같은 줄
+#   네임스페이스: 같은 줄
+#   else: 새 줄
+#   catch: 새 줄
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Never
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: true
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true

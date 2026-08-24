@@ -1,0 +1,10 @@
+# Git attributes to enforce UTF-8 working-tree encoding for source/docs
+# 권장: 한글(주석/문서)은 UTF-8로 통일
+*.cpp text working-tree-encoding=UTF-8
+*.h   text working-tree-encoding=UTF-8
+*.md  text working-tree-encoding=UTF-8
+*.ps1 text working-tree-encoding=UTF-8
+
+# 기타
+*.sln text
+*.vcxproj text
